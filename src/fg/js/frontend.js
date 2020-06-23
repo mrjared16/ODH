@@ -15,7 +15,8 @@ class ODHFront {
         this.popup = new Popup();
         this.timeout = null;
         this.mousemoved = false;
-
+        this.imgs = null;
+        this.selectedImage = '';
         window.addEventListener('mousemove', e => this.onMouseMove(e));
         window.addEventListener('mousedown', e => this.onMouseDown(e));
         window.addEventListener('dblclick', e => this.onDoubleClick(e));
@@ -109,7 +110,7 @@ class ODHFront {
         const { action, params } = request;
         const method = this['api_' + action];
 
-        if (typeof(method) === 'function') {
+        if (typeof (method) === 'function') {
             params.callback = callback;
             method.call(this, params);
         }
@@ -130,9 +131,22 @@ class ODHFront {
     onFrameMessage(e) {
         const { action, params } = e.data;
         const method = this['api_' + action];
-        if (typeof(method) === 'function') {
+        if (typeof (method) === 'function') {
             method.call(this, params);
         }
+    }
+
+     // receive call from injection script
+    async api_searchImage({ term }) {
+       
+        // call to front end api
+        this.imgs = await searchImage(term);
+        // send to web page api
+        this.popup.sendMessage('loadImages', { img_urls: this.imgs });
+    }
+
+    async api_selectImage({ img }) {
+        this.selectedImage = img;
     }
 
     async api_addNote(params) {
@@ -142,6 +156,8 @@ class ODHFront {
         notedef.definition = this.notes[nindex].css + this.notes[nindex].definitions[dindex];
         notedef.definitions = this.notes[nindex].css + this.notes[nindex].definitions.join('<hr>');
         notedef.sentence = context;
+        notedef.extrainfo = this.selectedImage;
+        this.selectedImage = '';
         notedef.url = window.location.href;
         let response = await addNote(notedef);
         this.popup.sendMessage('setActionState', { response, params });
@@ -176,6 +192,7 @@ class ODHFront {
         this.audio[url] = audio;
     }
 
+
     buildNote(result) {
         //get 1 sentence around the expression.
         const expression = selectedText();
@@ -191,7 +208,6 @@ class ODHFront {
             url: '',
             audios: [],
         };
-
         //if 'result' is array with notes.
         if (Array.isArray(result)) {
             for (const item of result) {
@@ -208,7 +224,7 @@ class ODHFront {
     }
 
     async renderPopup(notes) {
-        let content = '';
+        let content = `<div id='odh-img-search'><button id='odh-img-search-btn'>Search for image</button></div>`;
         let services = this.options ? this.options.services : '';
         let image = '';
         let imageclass = '';
@@ -234,7 +250,7 @@ class ODHFront {
                     <span class="odh-extra">${note.extrainfo}</span>
                 </div>`;
             for (const [dindex, definition] of note.definitions.entries()) {
-                let button = (services == 'none' || services == '') ? '' : `<img ${imageclass} data-nindex="${nindex}" data-dindex="${dindex}" src="${chrome.runtime.getURL('fg/img/'+ image)}" />`;
+                let button = (services == 'none' || services == '') ? '' : `<img ${imageclass} data-nindex="${nindex}" data-dindex="${dindex}" src="${chrome.runtime.getURL('fg/img/' + image)}" />`;
                 content += `<div class="odh-definition">${button}${definition}</div>`;
             }
             content += '</div>';
@@ -249,8 +265,8 @@ class ODHFront {
         return `
         <html lang="en">
             <head><meta charset="UTF-8"><title></title>
-                <link rel="stylesheet" href="${root+'fg/css/frame.css'}">
-                <link rel="stylesheet" href="${root+'fg/css/spell.css'}">
+                <link rel="stylesheet" href="${root + 'fg/css/frame.css'}">
+                <link rel="stylesheet" href="${root + 'fg/css/spell.css'}">
             </head>
             <body style="margin:0px;">
             <div class="odh-notes">`;
@@ -267,15 +283,15 @@ class ODHFront {
             </div>
             <div class="icons hidden"">
                 <img id="plus" src="${button}"/>
-                <img id="load" src="${root+'fg/img/load.gif'}"/>
-                <img id="good" src="${root+'fg/img/good.png'}"/>
-                <img id="fail" src="${root+'fg/img/fail.png'}"/>
-                <img id="play" src="${root+'fg/img/play.png'}"/>
+                <img id="load" src="${root + 'fg/img/load.gif'}"/>
+                <img id="good" src="${root + 'fg/img/good.png'}"/>
+                <img id="fail" src="${root + 'fg/img/fail.png'}"/>
+                <img id="play" src="${root + 'fg/img/play.png'}"/>
                 <div id="context">${this.sentence}</div>
                 <div id="monolingual">${monolingual}</div>
                 </div>
-            <script src="${root+'fg/js/spell.js'}"></script>
-            <script src="${root+'fg/js/frame.js'}"></script>
+            <script src="${root + 'fg/js/spell.js'}"></script>
+            <script src="${root + 'fg/js/frame.js'}"></script>
             </body>
         </html>`;
     }
