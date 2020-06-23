@@ -56,9 +56,9 @@ function registerSoundLinks() {
     }
 }
 
-function initSpellnTranslation(){
+function initSpellnTranslation() {
     document.querySelector('#odh-container').appendChild(spell());
-    document.querySelector('.spell-content').innerHTML=document.querySelector('#context').innerHTML;
+    document.querySelector('.spell-content').innerHTML = document.querySelector('#context').innerHTML;
     if (document.querySelector('#monolingual').innerText == '1')
         hideTranslation();
 }
@@ -73,11 +73,47 @@ function registerHiddenClass() {
     }
 }
 
-function hideTranslation(){
+function hideTranslation() {
     let className = 'span.chn_dis, span.chn_tran, span.chn_sent, span.tgt_tran, span.tgt_sent'; // to add your bilingual translation div class name here.
     for (let div of document.querySelectorAll(className)) {
         div.classList.toggle('hidden');
     }
+}
+
+function registerSearchImage() {
+    const button = document.getElementById('odh-img-search-btn');
+    button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        const term = document.querySelector('.odh-expression');
+        if (!document.querySelector('img.odh-img')) {
+            // send to extension
+            window.parent.postMessage({
+                action: 'searchImage',
+                params: {
+                    term: term.innerText
+                }
+            }, '*');
+            // $(document).on("click", <selector>, handler)
+            document.getElementById('odh-img-search').addEventListener("click", function (e) {
+                for (let target = e.target; target && target != this; target = target.parentNode) {
+                    // loop parent nodes from the target to the delegation node
+                    function selectCurrentImage(e) {
+                        window.parent.postMessage({
+                            action: 'selectImage',
+                            params: {
+                                img: e.target.src
+                            }
+                        }, '*');
+                    }
+                    if (target.matches('img.odh-img')) {
+                        selectCurrentImage.call(target, e);
+                        break;
+                    }
+                }
+            }, false);
+        }
+    });
 }
 
 function onDomContentLoaded() {
@@ -85,13 +121,14 @@ function onDomContentLoaded() {
     registerAudioLinks();
     registerSoundLinks();
     registerHiddenClass();
+    registerSearchImage();
     initSpellnTranslation();
 }
 
 function onMessage(e) {
     const { action, params } = e.data;
     const method = window['api_' + action];
-    if (typeof(method) === 'function') {
+    if (typeof (method) === 'function') {
         method(params);
     }
 }
@@ -111,6 +148,15 @@ function api_setActionState(result) {
     }, 1000);
 }
 
+// receive call from extension
+function api_loadImages(result) {
+    const { img_urls } = result;
+    document.getElementById('odh-img-search').innerHTML = img_urls.slice(0, 5)
+        .map(url => `<img class='odh-img' src='${url}'/>`)
+        .join('\n');
+
+}
+
 function onMouseWheel(e) {
     document.querySelector('html').scrollTop -= e.wheelDeltaY / 3;
     document.querySelector('body').scrollTop -= e.wheelDeltaY / 3;
@@ -119,4 +165,4 @@ function onMouseWheel(e) {
 
 document.addEventListener('DOMContentLoaded', onDomContentLoaded, false);
 window.addEventListener('message', onMessage);
-window.addEventListener('wheel', onMouseWheel, {passive: false});
+window.addEventListener('wheel', onMouseWheel, { passive: false });
