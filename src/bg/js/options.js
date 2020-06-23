@@ -53,7 +53,7 @@ async function updateAnkiStatus(options) {
             $('#duplicate-option').show();
         else {
             $('#duplicate-option').hide();
-    }
+        }
 
     }
 }
@@ -66,7 +66,7 @@ function populateDictionary(dicts) {
 function populateSysScriptsList(dictLibrary) {
     const optionscripts = Array.from(new Set(dictLibrary.split(',').filter(x => x).map(x => x.trim())));
     let systemscripts = [
-        'builtin_encn_Collins', 'general_Makenotes',//default & builtin script
+        'builtin_encn_Collins', 'builtin_enen_Collins', 'general_Makenotes',//default & builtin script
         'cncn_Zdic', //cn-cn dictionary
         'encn_Collins', 'encn_Cambridge', 'encn_Cambridge_tc', 'encn_Oxford', 'encn_Youdao', 'encn_Baicizhan', //en-cn dictionaries
         'enen_Collins', 'enen_LDOCE6MDX', 'enen_UrbanDict', //en-en dictionaries
@@ -77,8 +77,8 @@ function populateSysScriptsList(dictLibrary) {
     $('#scriptslistbody').empty();
     systemscripts.forEach(script => {
         let row = '';
-        row += `<input class="sl-col sl-col-onoff" type="checkbox" ${optionscripts.includes(script) || optionscripts.includes('lib://'+script)?'checked':''}>`;
-        row += `<input class="sl-col sl-col-cloud" type="checkbox" ${optionscripts.includes('lib://'+script)?'checked':''}>`;
+        row += `<input class="sl-col sl-col-onoff" type="checkbox" ${optionscripts.includes(script) || optionscripts.includes('lib://' + script) ? 'checked' : ''}>`;
+        row += `<input class="sl-col sl-col-cloud" type="checkbox" ${optionscripts.includes('lib://' + script) ? 'checked' : ''}>`;
         row += `<span class="sl-col sl-col-name">${script}</span>`;
         row += `<span class="sl-col sl-col-description">${chrome.i18n.getMessage(script)}</span>`;
         $('#scriptslistbody').append($(`<div class="sl-row">${row}</div>`));
@@ -91,7 +91,7 @@ function populateSysScriptsList(dictLibrary) {
 
 function onScriptListChange() {
     let dictLibrary = [];
-    $('.sl-row').each(function() {
+    $('.sl-row').each(function () {
         if ($('.sl-col-onoff', this).prop('checked') == true)
             dictLibrary.push($('.sl-col-cloud', this).prop('checked') ? 'lib://' + $('.sl-col-name', this).text() : $('.sl-col-name', this).text());
     });
@@ -151,7 +151,7 @@ async function onSaveClicked(e) {
     options.services = $('#services').val();
     options.id = $('#id').val();
     options.password = $('#password').val();
-    
+
     options.duplicate = $('#duplicate').val();
 
     let fields = ['deckname', 'typename', 'expression', 'reading', 'extrainfo', 'definition', 'definitions', 'sentence', 'url', 'audio'];
