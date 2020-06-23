@@ -63,7 +63,7 @@ class ODHBack {
         });
     }
 
-    checkLastError(){
+    checkLastError() {
         // NOP
     }
 
@@ -94,6 +94,10 @@ class ODHBack {
         };
 
         let fieldnames = ['expression', 'reading', 'extrainfo', 'definition', 'definitions', 'sentence', 'url'];
+        if (notedef['extrainfo'].length) {
+            notedef['extrainfo'] = `<img src='${notedef['extrainfo']}'/>`;
+        }
+
         for (const fieldname of fieldnames) {
             if (!options[fieldname]) continue;
             note.fields[options[fieldname]] = notedef[fieldname];
@@ -119,7 +123,7 @@ class ODHBack {
         const { action, params } = request;
         const method = this['api_' + action];
 
-        if (typeof(method) === 'function') {
+        if (typeof (method) === 'function') {
             params.callback = callback;
             method.call(this, params);
         }
@@ -132,7 +136,7 @@ class ODHBack {
             params
         } = e.data;
         const method = this['api_' + action];
-        if (typeof(method) === 'function')
+        if (typeof (method) === 'function')
             method.call(this, params);
 
     }
@@ -201,8 +205,31 @@ class ODHBack {
         }
     }
 
+    // receive from front end
+    async api_searchImage(params) {
+        let { expression, callback } = params;
+        try {
+            // receive call
+            let result = await this.searchImage(expression);
+            callback(result);
+        } catch (err) {
+            console.error(err);
+            callback(null);
+        }
+    }
+
     async api_addNote(params) {
         let { notedef, callback } = params;
+
+        try {
+            const fileName = `ODH_${encodeURIComponent(notedef.expression)}_${Date.now()}.png`;
+            notedef.extrainfo = filename;
+            getBase64FromURL(notedef.extrainfo)
+                .then((data) => data.replace(/^data:[\w\W]*?,/, ''))
+                .then(data => this.target.storeMediaFile(fileName, data))
+        } catch (e) {
+            // notedef.extrainfo = '';
+        }
 
         const note = this.formatNote(notedef);
         try {
@@ -211,6 +238,26 @@ class ODHBack {
         } catch (err) {
             console.error(err);
             callback(null);
+        }
+
+        async function getBase64FromURL(url) {
+            return new Promise((resolve, reject) => {
+                let canvas = document.createElement('CANVAS');
+                let ctx = canvas.getContext('2d');
+                let img = new Image;
+                img.crossOrigin = 'Anonymous';
+                img.onload = function () {
+                    canvas.height = img.height;
+                    canvas.width = img.width;
+                    ctx.drawImage(img, 0, 0);
+                    const dataURL = canvas.toDataURL('image/png');
+                    resolve(dataURL);
+                    // Clean up
+                    canvas = null;
+                };
+                img.src = url;
+            });
+
         }
     }
 
@@ -290,6 +337,14 @@ class ODHBack {
     async findTerm(expression) {
         return new Promise((resolve, reject) => {
             this.agent.postMessage('findTerm', { expression }, result => resolve(result));
+        });
+    }
+
+    // receive from backend api
+    async searchImage(expression) {
+        return new Promise((resolve, reject) => {
+            // call sandbox
+            this.agent.postMessage('searchImage', { expression }, result => resolve(result));
         });
     }
 

@@ -77,6 +77,33 @@ class Sandbox {
         }
         api.callback(null, callbackId);
     }
+    
+    // receive call from backend
+    async backend_searchImage(params) {
+        let { expression, callbackId } = params;
+        let img_urls = [];
+        const GOOGLE_IMG_URI = `https://www.google.com/search?q=${encodeURIComponent(expression)}&tbm=isch`;
+        // get google image query result
+        let html = await api.fetch(GOOGLE_IMG_URI);
+        // extract image url
+        const regex = /AF_initDataCallback[\s\S]+AF_initDataCallback\({key: '[\s\S]+?',[\s\S]+?data:(\[[\s\S]+\])[\s\S]+?<\/script><script id=/gm;
+        let matches = regex.exec(html);
+        if (!matches.length){
+            api.callback(img_urls, callbackId);
+            return;
+        }
+    
+        let images = JSON.parse(matches[1])[31][0][12][2];
+        images.forEach(element => {
+            // valid image info
+            if (element[1]) {
+                // get url
+                img_urls.push(element[1][3][0]);
+            }
+        });
+
+        api.callback(img_urls, callbackId);
+    }
 }
 
 window.sandbox = new Sandbox();

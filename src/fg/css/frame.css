@@ -116,3 +116,13 @@ hr {
   text-decoration: none;
   text-align: center;
 }
+
+#odh-img-search{
+  display: flex;
+  max-width: 80%;
+}
+
+#odh-img-search img{
+  max-height: 50px;
+  width: auto;
+}
