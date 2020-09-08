@@ -136,15 +136,16 @@ class ODHFront {
         }
     }
 
-     // receive call from injection script
+     // handle when search button click
     async api_searchImage({ term }) {
-       
-        // call to front end api
+        // send to backend through searchImage API in api.js and receive result
         this.imgs = await searchImage(term);
-        // send to web page api
+
+        // send images to popup api through loadImages API in frame.js and show the images
         this.popup.sendMessage('loadImages', { img_urls: this.imgs });
     }
 
+    // handle when image click
     async api_selectImage({ img }) {
         this.selectedImage = img;
     }
@@ -156,8 +157,11 @@ class ODHFront {
         notedef.definition = this.notes[nindex].css + this.notes[nindex].definitions[dindex];
         notedef.definitions = this.notes[nindex].css + this.notes[nindex].definitions.join('<hr>');
         notedef.sentence = context;
+
+        // save image url to save as file in backend
         notedef.extrainfo = this.selectedImage;
         this.selectedImage = '';
+
         notedef.url = window.location.href;
         let response = await addNote(notedef);
         this.popup.sendMessage('setActionState', { response, params });

@@ -223,7 +223,7 @@ class ODHBack {
 
         try {
             const fileName = `ODH_${encodeURIComponent(notedef.expression)}_${Date.now()}.png`;
-            notedef.extrainfo = filename;
+            notedef.extrainfo = fileName;
             getBase64FromURL(notedef.extrainfo)
                 .then((data) => data.replace(/^data:[\w\W]*?,/, ''))
                 .then(data => this.target.storeMediaFile(fileName, data))
