@@ -279,7 +279,7 @@ class ODHBack {
                 this.target = null;
         }
 
-        let defaultscripts = ['builtin_encn_Collins'];
+        let defaultscripts = ['builtin_enen_Collins'];
         let newscripts = `${options.sysscripts},${options.udfscripts}`;
         let loadresults = null;
         if (!this.options || (`${this.options.sysscripts},${this.options.udfscripts}` != newscripts)) {
