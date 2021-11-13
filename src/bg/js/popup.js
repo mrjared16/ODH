@@ -30,9 +30,13 @@ async function onOptionChanged(e) {
     let options = await optionsLoad();
 
     options.enabled = $('#enabled').prop('checked');
+    options.mouseselection = $('#mouseselection').prop('checked');
     options.hotkey = $('#hotkey').val();
-    options.deckname = $('#deckname').val();
+
     options.dictSelected = $('#dict').val();
+
+    options.deckname = $('#deckname').val();
+    options.tags = $('#tags').val();
     let newOptions = await odhback().opt_optionsChanged(options);
     optionsSave(newOptions);
 }
@@ -49,15 +53,21 @@ async function onReady() {
     localizeHtmlPage();
     let options = await optionsLoad();
     $('#enabled').prop('checked', options.enabled);
+    $('#mouseselection').prop('checked', options.mouseselection);
     $('#hotkey').val(options.hotkey);
-    $('#deckname').val(options.deckname);
     populateDictionary(options.dictNamelist);
     $('#dict').val(options.dictSelected);
+    $('#deckname').val(options.deckname);
+    $('#tags').val(options.tags);
 
     $('#enabled').change(onOptionChanged);
+    $('#mouseselection').change(onOptionChanged);
     $('#hotkey').change(onOptionChanged);
-    $('#deckname').change(onOptionChanged);
     $('#dict').change(onOptionChanged);
+
+    $('#deckname').change(onOptionChanged);
+    $('#tags').change(onOptionChanged);
+
     $('#more').click(onMoreOptions);
 
     $('.anki-options').hide();

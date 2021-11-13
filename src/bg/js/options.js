@@ -140,6 +140,7 @@ async function onSaveClicked(e) {
     let options = $.extend(true, {}, optionsOld);
 
     options.enabled = $('#enabled').prop('checked');
+    options.mouseselection = $('#mouseselection').prop('checked');
     options.hotkey = $('#hotkey').val();
 
     options.dictSelected = $('#dict').val();
@@ -151,7 +152,8 @@ async function onSaveClicked(e) {
     options.services = $('#services').val();
     options.id = $('#id').val();
     options.password = $('#password').val();
-
+    
+    options.tags = $('#tags').val();
     options.duplicate = $('#duplicate').val();
 
     let fields = ['deckname', 'typename', 'expression', 'reading', 'extrainfo', 'definition', 'definitions', 'sentence', 'url', 'audio'];
@@ -182,6 +184,7 @@ async function onReady() {
     localizeHtmlPage();
     let options = await optionsLoad();
     $('#enabled').prop('checked', options.enabled);
+    $('#mouseselection').prop('checked', options.mouseselection);
     $('#hotkey').val(options.hotkey);
 
     populateDictionary(options.dictNamelist);
@@ -196,6 +199,7 @@ async function onReady() {
     $('#id').val(options.id);
     $('#password').val(options.password);
 
+    $('#tags').val(options.tags);
     $('#duplicate').val(options.duplicate);
 
     let fields = ['deckname', 'typename', 'expression', 'reading', 'extrainfo', 'definition', 'definitions', 'sentence', 'url', 'audio'];

@@ -24,9 +24,9 @@ class encn_Oxford {
     async getToken() {
         let homeurl = 'https://fanyi.baidu.com/';
         let homepage = await api.fetch(homeurl);
-        let tmatch = /token: '(.+?)'/gi.exec(homepage);
+        let tmatch = /token: ['"](.+?)['"]/gi.exec(homepage);
         if (!tmatch || tmatch.length < 2) return null;
-        let gmatch = /window.gtk = '(.+?)'/gi.exec(homepage);
+        let gmatch = /window.gtk = ['"](.+?)['"]/gi.exec(homepage);
         if (!gmatch || gmatch.length < 2) return null;
         return {
             'token': tmatch[1],
@@ -119,8 +119,8 @@ class encn_Oxford {
                 let reading = reading_uk && reading_us ? `uk[${reading_uk}] us[${reading_us}]` : '';
 
                 let audios = [];
-                audios[0] = `http://fanyi.baidu.com/gettts?lan=uk&text=${encodeURIComponent(expression)}&spd=3&source=web`;
-                audios[1] = `http://fanyi.baidu.com/gettts?lan=en&text=${encodeURIComponent(expression)}&spd=3&source=web`;
+                audios[0] = `https://fanyi.baidu.com/gettts?lan=uk&text=${encodeURIComponent(expression)}&spd=3&source=web`;
+                audios[1] = `https://fanyi.baidu.com/gettts?lan=en&text=${encodeURIComponent(expression)}&spd=3&source=web`;
 
                 if (!symbols.parts || symbols.parts.length < 1) return [];
                 let definition = '<ul class="ec">';

@@ -1,4 +1,4 @@
-/* global Popup, rangeFromPoint, TextSourceRange, selectedText, isEmpty, getSentence, isConnected, addNote, getTranslation, isValidElement*/
+/* global Popup, rangeFromPoint, TextSourceRange, selectedText, isEmpty, getSentence, isConnected, addNote, getTranslation, playAudio, isValidElement*/
 class ODHFront {
 
     constructor() {
@@ -49,6 +49,9 @@ class ODHFront {
     }
 
     onDoubleClick(e) {
+        if (!this.mouseselection)
+            return;
+
         if (!isValidElement())
             return;
 
@@ -72,7 +75,7 @@ class ODHFront {
 
     userSelectionChanged(e) {
 
-        if (!this.enabled || !this.mousemoved) return;
+        if (!this.enabled || !this.mousemoved || !this.mouseselection) return;
 
         if (this.timeout) {
             clearTimeout(this.timeout);
@@ -122,6 +125,7 @@ class ODHFront {
         let { options, callback } = params;
         this.options = options;
         this.enabled = options.enabled;
+        this.mouseselection = options.mouseselection;
         this.activateKey = Number(this.options.hotkey);
         this.maxContext = Number(this.options.maxcontext);
         this.services = options.services;
@@ -167,19 +171,10 @@ class ODHFront {
         this.popup.sendMessage('setActionState', { response, params });
     }
 
-    api_playAudio(params) {
+    async api_playAudio(params) {
         let { nindex, dindex } = params;
         let url = this.notes[nindex].audios[dindex];
-
-        for (let key in this.audio) {
-            this.audio[key].pause();
-        }
-
-        const audio = this.audio[url] || new Audio(url);
-        audio.currentTime = 0;
-        audio.play();
-
-        this.audio[url] = audio;
+        let response = await playAudio(url);
     }
 
     api_playSound(params) {

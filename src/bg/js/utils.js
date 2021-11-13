@@ -2,6 +2,7 @@ function sanitizeOptions(options) {
     const defaults = {
         enabled: false,
         hotkey: '0', // 0:off , 16:shift, 17:ctrl, 18:alt
+        mouseselection: true,
         maxcontext: '1',
         maxexample: '2',
         monolingual: '1', //0: bilingual 1:monolingual
@@ -10,7 +11,8 @@ function sanitizeOptions(options) {
         id: '',
         password: '',
 
-        duplicate: '1', // 0: not allowe duplicated cards; 1: allowe duplicated cards; 
+        duplicate: '1', // 0: not allowe duplicated cards; 1: allowe duplicated cards;
+        tags: 'ODH',
         deckname: 'Default',
         typename: 'Basic',
         expression: 'Front',

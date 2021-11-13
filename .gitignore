@@ -21,3 +21,6 @@
 
 # JS Beautify
 .jsbeautifyrc
+
+# for Mac
+.DS_Store
