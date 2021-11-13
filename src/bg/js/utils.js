@@ -1,10 +1,10 @@
 function sanitizeOptions(options) {
     const defaults = {
-        enabled: true,
-        hotkey: '16', // 0:off , 16:shift, 17:ctrl, 18:alt
+        enabled: false,
+        hotkey: '0', // 0:off , 16:shift, 17:ctrl, 18:alt
         maxcontext: '1',
         maxexample: '2',
-        monolingual: '0', //0: bilingual 1:monolingual
+        monolingual: '1', //0: bilingual 1:monolingual
         preferredaudio: '0',
         services: 'none',
         id: '',

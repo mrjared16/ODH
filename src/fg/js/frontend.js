@@ -8,7 +8,7 @@ class ODHFront {
         this.sentence = null;
         this.audio = {};
         this.enabled = true;
-        this.activateKey = 16; // shift 16, ctl 17, alt 18
+        this.activateKey = 0; // shift 16, ctl 17, alt 18
         this.exitKey = 27; // esc 27
         this.maxContext = 1; //max context sentence #
         this.services = 'none';
@@ -20,7 +20,7 @@ class ODHFront {
         window.addEventListener('mousemove', e => this.onMouseMove(e));
         window.addEventListener('mousedown', e => this.onMouseDown(e));
         window.addEventListener('dblclick', e => this.onDoubleClick(e));
-        window.addEventListener('keydown', e => this.onKeyDown(e));
+        // window.addEventListener('keydown', e => this.onKeyDown(e));
 
         chrome.runtime.onMessage.addListener(this.onBgMessage.bind(this));
         window.addEventListener('message', e => this.onFrameMessage(e));
