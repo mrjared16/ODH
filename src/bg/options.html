@@ -25,14 +25,15 @@
                 <div class="grouppanel">
                     <div class="grouptitle">
                         <span data-i18n="grpGeneral">General Options</span>
-                        <span class="option-helps"> <a href="https://github.com/ninja33/ODH/blob/master/README.md" target="_blank">?</a> </span>
+                        <span class="option-helps"> <a href="https://github.com/ninja33/ODH/blob/master/README.md"
+                                target="_blank">?</a> </span>
                     </div>
                     <div class="leftpanel">
                         <label data-i18n="lblEnabled">Enable/Disable</label>
                         <div class="enabled">
                             <input type="checkbox" value=true id="enabled">
                             <label for="enabled"></label>
-                        </div>                        
+                        </div>
                         <label data-i18n="lblMouseselection">Enable/Disable</label>
                         <div class="enabled">
                             <input type="checkbox" value=true id="mouseselection">
@@ -95,7 +96,8 @@
                 <div class="grouppanel">
                     <div class="grouptitle">
                         <span data-i18n="grpAnki">Anki Options</span>
-                        <span class="option-helps"> <a href="https://github.com/FooSoft/anki-connect" target="_blank">?</a> </span>
+                        <span class="option-helps"> <a href="https://github.com/FooSoft/anki-connect"
+                                target="_blank">?</a> </span>
                     </div>
                     <div class="crosspanel">
                         <label data-i18n="lblServices">Services</label>
@@ -111,7 +113,8 @@
                         <div class="crosspanel">
                             <label data-i18n="lblUsername">ID</label>
                             <input type="text" id="id" placeholder="Ankiweb Username" class="col-2x">
-                            <label><a href="https://ankiweb.net/account/register" target="_blank" data-i18n="lblSignup">?</a></label>
+                            <label><a href="https://ankiweb.net/account/register" target="_blank"
+                                    data-i18n="lblSignup">?</a></label>
                             <label data-i18n="lblPassword">Password</label>
                             <input type="password" id="password" placeholder="Ankiweb Password" class="col-2x">
                             <label class="button" id="login" data-i18n="lblSignin">Signin</label>
@@ -135,6 +138,8 @@
                             <select id="definition"></select>
                             <label for="definitions" data-i18n="lblDefinitions">Definition</label>
                             <select id="definitions"></select>
+                            <label for="imageurl" data-i18n="lblImageUrl">ImageUrl</label>
+                            <select id="imageurl"> </select>
                         </div>
                         <div class="rightpanel">
                             <label for="sentence" data-i18n="lblSentence">Sentence</label>
@@ -169,11 +174,14 @@
                 <div class="grouppanel">
                     <div class="grouptitle">
                         <span data-i18n="grpUdfScripts">User-Defined Script</span>
-                        <span class="option-helps"><a href="https://github.com/ninja33/ODH/blob/master/doc/development.md" target="_blank">?</a></span>
+                        <span class="option-helps"><a
+                                href="https://github.com/ninja33/ODH/blob/master/doc/development.md"
+                                target="_blank">?</a></span>
                     </div>
                     <div class="crosspanel">
                         <label data-i18n="lblUdfScripts">UDF Scripts Name</label>
-                        <input type="text" id="udfscripts" placeholder="http(s)://your_host.com/your_script.js" class="col-3x">
+                        <input type="text" id="udfscripts" placeholder="http(s)://your_host.com/your_script.js"
+                            class="col-3x">
                     </div>
                 </div>
                 <div class="grouppanel">
@@ -187,7 +195,10 @@
                     </div>
                     <div class="crosspanel">
                         <div id="scriptslisthead" class="sl-head">
-                            <span class="sl-col sl-col-onoff" data-i18n="lstOnoff">OnOff</span><span class="sl-col sl-col-cloud" data-i18n="lstCloud">Cloud</span><span class="sl-col sl-col-name" data-i18n="lstName">Script Name</span><span class="sl-col sl-col-description" data-i18n="lstDescription">Script Description</span>
+                            <span class="sl-col sl-col-onoff" data-i18n="lstOnoff">OnOff</span><span
+                                class="sl-col sl-col-cloud" data-i18n="lstCloud">Cloud</span><span
+                                class="sl-col sl-col-name" data-i18n="lstName">Script Name</span><span
+                                class="sl-col sl-col-description" data-i18n="lstDescription">Script Description</span>
                         </div>
                         <div class="scriptlistwrapper">
                             <div id="scriptslistbody" class="sl-body"></div>

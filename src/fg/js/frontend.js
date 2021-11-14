@@ -15,8 +15,8 @@ class ODHFront {
         this.popup = new Popup();
         this.timeout = null;
         this.mousemoved = false;
-        this.imgs = null;
-        this.selectedImage = '';
+        this.imgUrls = null;
+        this.selectedImageUrl = '';
         window.addEventListener('mousemove', e => this.onMouseMove(e));
         window.addEventListener('mousedown', e => this.onMouseDown(e));
         window.addEventListener('dblclick', e => this.onDoubleClick(e));
@@ -143,28 +143,29 @@ class ODHFront {
      // handle when search button click
     async api_searchImage({ term }) {
         // send to backend through searchImage API in api.js and receive result
-        this.imgs = await searchImage(term);
+        this.imgUrls = await searchImage(term);
 
         // send images to popup api through loadImages API in frame.js and show the images
-        this.popup.sendMessage('loadImages', { img_urls: this.imgs });
+        this.popup.sendMessage('loadImages', { img_urls: this.imgUrls });
     }
 
     // handle when image click
-    async api_selectImage({ img }) {
-        this.selectedImage = img;
+    async api_selectImage({ imgUrl }) {
+        this.selectedImageUrl = imgUrl;
     }
 
     async api_addNote(params) {
         let { nindex, dindex, context } = params;
-
-        let notedef = Object.assign({}, this.notes[nindex]);
-        notedef.definition = this.notes[nindex].css + this.notes[nindex].definitions[dindex];
-        notedef.definitions = this.notes[nindex].css + this.notes[nindex].definitions.join('<hr>');
+        const currentNote = this.notes[nindex];
+        const { css, definitions } = currentNote;
+        let notedef = Object.assign({}, currentNote);
+        notedef.definition = css + definitions[dindex];
+        notedef.definitions = css + definitions.join('<hr>');
         notedef.sentence = context;
 
         // save image url to save as file in backend
-        notedef.extrainfo = this.selectedImage;
-        this.selectedImage = '';
+        notedef['imageurl'] = this.selectedImageUrl;
+        this.selectedImageUrl = '';
 
         notedef.url = window.location.href;
         let response = await addNote(notedef);

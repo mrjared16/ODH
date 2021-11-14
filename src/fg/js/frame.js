@@ -102,7 +102,7 @@ function registerSearchImage() {
                         window.parent.postMessage({
                             action: 'selectImage',
                             params: {
-                                img: e.target.src
+                                imgUrl: e.target.src
                             }
                         }, '*');
                     }

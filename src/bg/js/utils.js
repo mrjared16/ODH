@@ -18,6 +18,7 @@ function sanitizeOptions(options) {
         expression: 'Front',
         reading: '',
         extrainfo: '',
+        imageurl: '',
         definition: 'Back',
         definitions: '',
         sentence: '',

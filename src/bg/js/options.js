@@ -23,7 +23,7 @@ async function populateAnkiFields(options) {
     let names = await odhback().opt_getModelFieldNames(modelName);
     if (names == null) return;
 
-    let fields = ['expression', 'reading', 'extrainfo', 'definition', 'definitions', 'sentence', 'url', 'audio'];
+    let fields = ['expression', 'reading', 'extrainfo', 'definition', 'definitions', 'sentence', 'url', 'audio', 'imageurl'];
     fields.forEach(field => {
         $(`#${field}`).empty();
         $(`#${field}`).append($('<option>', { value: '', text: '' }));
@@ -156,7 +156,7 @@ async function onSaveClicked(e) {
     options.tags = $('#tags').val();
     options.duplicate = $('#duplicate').val();
 
-    let fields = ['deckname', 'typename', 'expression', 'reading', 'extrainfo', 'definition', 'definitions', 'sentence', 'url', 'audio'];
+    let fields = ['deckname', 'typename', 'expression', 'reading', 'extrainfo', 'definition', 'definitions', 'sentence', 'url', 'audio', 'imageurl'];
     fields.forEach(field => {
         options[field] = $(`#${field}`).val() == null ? options[field] : $(`#${field}`).val();
     });
@@ -202,7 +202,7 @@ async function onReady() {
     $('#tags').val(options.tags);
     $('#duplicate').val(options.duplicate);
 
-    let fields = ['deckname', 'typename', 'expression', 'reading', 'extrainfo', 'definition', 'definitions', 'sentence', 'url', 'audio'];
+    let fields = ['deckname', 'typename', 'expression', 'reading', 'extrainfo', 'definition', 'definitions', 'sentence', 'url', 'audio', 'imageurl'];
     fields.forEach(field => {
         $(`#${field}`).val(options[field]);
     });
