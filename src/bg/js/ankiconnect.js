@@ -57,8 +57,8 @@ class Ankiconnect {
         return await this.ankiInvoke('modelFieldNames', { modelName });
     }
 
-    async storeMediaFile(fileName, dataBase64) {
-        return await this.ankiInvoke('storeMediaFile', { filename: fileName, data: dataBase64 });
+    async storeMediaFile(fileName, mediaData = { data: null }) {
+        return await this.ankiInvoke('storeMediaFile', { filename: fileName, ...mediaData });
     }
 
     async getVersion() {

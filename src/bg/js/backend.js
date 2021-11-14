@@ -94,13 +94,14 @@ class ODHBack {
             tags: []
         };
 
-        let fieldnames = ['expression', 'reading', 'extrainfo', 'definition', 'definitions', 'sentence', 'url'];
-        if (notedef['extrainfo'].length) {
-            notedef['extrainfo'] = `<img src='${notedef['extrainfo']}'/>`;
-        }
+        let fieldnames = ['expression', 'reading', 'extrainfo', 'definition', 'definitions', 'sentence', 'url', 'imageurl'];
 
         for (const fieldname of fieldnames) {
             if (!options[fieldname]) continue;
+            if (fieldname === 'imageurl') {
+                note.fields[options[fieldname]] = notedef[fieldname] ? `<img src='${notedef[fieldname]}'/>` : '';
+                continue;
+            }
             note.fields[options[fieldname]] = notedef[fieldname];
         }
 
@@ -225,15 +226,26 @@ class ODHBack {
 
     async api_addNote(params) {
         let { notedef, callback } = params;
-
-        try {
-            const fileName = `ODH_${encodeURIComponent(notedef.expression)}_${Date.now()}.png`;
-            notedef.extrainfo = fileName;
-            getBase64FromURL(notedef.extrainfo)
-                .then((data) => data.replace(/^data:[\w\W]*?,/, ''))
-                .then(data => this.target.storeMediaFile(fileName, data))
-        } catch (e) {
-            // notedef.extrainfo = '';
+        // save image to Anki
+        if (notedef['imageurl']) {
+            try {
+                const fileName = `ODH_${encodeURIComponent(notedef.expression)}_${Date.now()}.jpg`;
+                const data = {
+                    url: notedef['imageurl']
+                }
+                const result = await this.target.storeMediaFile(fileName, data);
+                // console.log({ result });
+                notedef['imageurl'] = result;
+                const saveBase64Image = async () => {
+                    const base64Image = (await getBase64FromURL(notedef['imageurl'])).replace(/^data:[\w\W]*?,/, '');
+                    const data = {
+                        data: base64Image
+                    }
+                    this.target.storeMediaFile(fileName, data);
+                }
+            } catch (e) {
+                // notedef.extrainfo = '';
+            }
         }
 
         const note = this.formatNote(notedef);
